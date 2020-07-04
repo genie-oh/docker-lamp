@@ -1,75 +1,109 @@
-## Description
-This is a multi domain basic LAMP environment built using Docker Compose.
-It consists following.
+# docker-lamp
+this is the LAMP environment built using Docker Compose.
 
-- php-fpm(php7)
+## Thanks for
+it is origined from [temori1919/docker-lamp](https://github.com/temori1919/docker-lamp)
+thanks for your works.
+
+## Consists
+- php-fpm(php7.4)
 - centos7
 - apache2.4
 - mariadb
-- phpMyAdmin
-- composer
-- node js (Gulp)
+- phpMyadmin
+- nodejs (with Gulp)
 
 ## Installation
 
 ```bash
 # clone this repository
-https://github.com/temori1919/docker-lamp.git
+https://github.com/genie-oh/docker-lamp.git
 cd docker-lamp
 # run docker compose
 docker-compose up -d
 ```
 
-
 ## How to use
-Code dir is documentroot.
-Put your app under the documentroot.
-then you can access like below.
+`code` dir is documentroot.
 
-```sh
- [your app dir].[public dir].lvh.me
+At first, you need to add below to `hosts` file for access.
+```
+127.0.0.1 lamplocal.me
+127.0.0.1 test.lamplocal.me
 ```
 
-You can access either http or https.
+try to access like below. can access only https.
+```sh
+https://lamplocal.me
+https://test.lamplocal.me
+```
 
-phpMyAdmin is [localhost:8080].
+## Constitution of documentroot.
+if you want to add new subdomain home directory, put your contents to `code/home_sub/{yourapp}/public/`
 
+```
+|-- code                          # -- Mounted on /var/www/html
+|   |-- config
+|   |   `-- default.json.example
+|   |-- gulpfile.js
+|   |-- home_root                 # -- root home
+|   |   `-- public                #    documentroot of lamplocal.jp
+|   |       `-- index.html        #    can run only static contents.
+|   |-- home_sub                  # -- virtual host home
+|   |   `-- test                  #    you can add directory & use by subdomain
+|   |       `-- public            #    documentroot of test.lamplocal.jp
+|   |           `-- index.php     #    can run php script
+|   `-- nodeapp
+```
 
-## Constitution
+## Constitution about Docker Compose
 ```
 docker-lamp/
-├── web
-│   ├── logs
-│   ├── Dockerfile
-│   └── docker.conf  #Copy to /etc/httpd/conf.d
-├── php
-│   ├── xdebug.ini   #Copy to /usr/local/etc/php/conf.d
-│   └── Dockerfile
-├── db
-│   ├── logs
-│   ├── my.cnf  #Copy to /etc/mysql/conf.d
-│   └── Dockerfile
-├── code  #Mounted on /var/www/html
-│   ├── example
-|   ├── gulpfile.js
-│   └── config
-|      └── default.json.example
+|-- db
+|   |-- Dockerfile
+|   |-- logs            # For slow query log
+|   `-- my.cnf          # Copy to /etc/mysql/conf.d
+|-- node
+|   `-- Dockerfile
+|-- php
+|   |-- Dockerfile
+|   |-- logs            # For xdebug.log
+|   `-- xdebug.ini      # Copy to /usr/local/etc/php/conf.d
+|-- redis
+|   |-- Dockerfile
+|   |-- data            # for redis data
+|   |-- logs            # for redis log
+|   `-- redis.conf      # Copy to /usr/local/etc/redis/redis.conf
+`-- web
+|   |-- Dockerfile
+|   |-- docker.conf     # Copy to /etc/httpd/conf.d
+|   `-- logs            # for apache log
 └── docker-compose.yml
 ```
+
 ## PHP
-The PHP extension installs only mailparse and xdebug.
-The xdebug configuration file is in the following directory.
-```bash
-docker-lamp/php/xdebug.ini
+this contain below PHP extension
+```
+zip
+imagick
+gd
+soap
+xmlrpc
+redis
+xdebug
+bcmath
+pdo_mysql
 ```
 
-If you want to install more PHP extension, 
-add it to the Dockerfile.
-
+If you want to install more PHP extension or remove,
+add or remove it in the Dockerfile.
 
 See more infomation
 
 [PHP official repository](https://hub.docker.com/_/php/)
+
+## phpMyAdmin
+phpMyAdmin is [localhost:8080].
 
 ## Composer
 
@@ -125,11 +159,4 @@ docker ps
 
 # remove container.
 docker kill [container_id]
-```
-
-## More information
-If you are using Laravel, 
-add the following ip to hosts for migration cmd.
-```
-127.0.0.1 db
 ```
