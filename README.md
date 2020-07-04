@@ -2,7 +2,8 @@
 this is the LAMP environment built using Docker Compose.
 
 ## Thanks for
-it is origined from [temori1919/docker-lamp](https://github.com/temori1919/docker-lamp)
+it is origined from [temori1919/docker-lamp](https://github.com/temori1919/docker-lamp).
+
 thanks for your works.
 
 ## Consists
@@ -12,6 +13,7 @@ thanks for your works.
 - mariadb
 - phpMyadmin
 - nodejs (with Gulp)
+- redis
 
 ## Installation
 
